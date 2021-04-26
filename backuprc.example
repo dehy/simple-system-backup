@@ -6,4 +6,4 @@ export RESTIC_REPOSITORY_PREFIX="s3:s3.eu-west-3.amazonaws.com/bucket_name"
 export RESTIC_PASSWORD="nonSecurePassword"
 
 export BACKUPED_HOST="$(uname -n)"
-export BACKUPED_DIRS=("/etc" "/var/lib/docker/volumes" "/home/morow")
+export BACKUPED_DIRS="/etc /var/lib/docker/volumes /home/morow"

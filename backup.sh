@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 set -eux
 
@@ -27,7 +27,7 @@ if [ -d "$PRE_BACKUP_HOOK_DIR" ]; then
 fi
 
 # Backup
-$RESTIC_BIN --verbose backup --exclude-file="$CURRENT_DIR/excludes.txt" ${BACKUPED_DIRS[*]}
+$RESTIC_BIN --verbose backup --exclude-file="$CURRENT_DIR/excludes.txt" ${BACKUPED_DIRS}
 
 # Cleanup
 $RESTIC_BIN --verbose forget --keep-daily 7 --keep-monthly 4 --prune
