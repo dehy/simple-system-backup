@@ -1,0 +1,9 @@
+$env:AWS_ACCESS_KEY_ID = "SAMPLE_KEY_ID"
+$env:AWS_SECRET_ACCESS_KEY = "SAMPLE_ACCESS_KEY"
+$env:AWS_DEFAULT_REGION = "eu-west-3"
+
+$RESTIC_REPOSITORY_PREFIX = "s3:s3.eu-west-3.amazonaws.com/bucket_name"
+$env:RESTIC_PASSWORD="nonSecurePassword"
+
+$BACKUPED_HOST="PC-HOME"
+$BACKUPED_DIRS="C:\Users\JohnDoe\", "E:\Data" 

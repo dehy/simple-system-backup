@@ -1,0 +1,9 @@
+export AWS_ACCESS_KEY_ID="SAMPLE_KEY_ID"
+export AWS_SECRET_ACCESS_KEY="SAMPLE_SECRET_KEY"
+export AWS_DEFAULT_REGION="eu-west-3"
+
+export RESTIC_REPOSITORY_PREFIX="s3:s3.eu-west-3.amazonaws.com/bucket_name"
+export RESTIC_PASSWORD="nonSecurePassword"
+
+export BACKUPED_HOST="$(uname -n)"
+export BACKUPED_DIRS=("/etc" "/var/lib/docker/volumes" "/home/morow")
