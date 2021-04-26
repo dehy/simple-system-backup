@@ -26,8 +26,12 @@ if [ -d "$PRE_BACKUP_HOOK_DIR" ]; then
     echo "Executing Pre Backup scripts"
 fi
 
+if [ -r "$CURRENT_DIR/excludes.txt" ]; then
+    $EXCLUDE_FILE_PARAM="--exclude-file=\"$CURRENT_DIR/excludes.txt\""
+fi
+
 # Backup
-$RESTIC_BIN --verbose backup --exclude-file="$CURRENT_DIR/excludes.txt" ${BACKUPED_DIRS}
+$RESTIC_BIN --verbose backup ${EXCLUDE_FILE_PARAM:-} ${BACKUPED_DIRS}
 
 # Cleanup
 $RESTIC_BIN --verbose forget --keep-daily 7 --keep-monthly 4 --prune
