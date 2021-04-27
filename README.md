@@ -1,5 +1,7 @@
 # dehy's Simple System Backup
 
+[![CI](https://github.com/dehy/simple-system-backup/actions/workflows/ci.yml/badge.svg)](https://github.com/dehy/simple-system-backup/actions/workflows/ci.yml)
+
 Leveraging [Restic](https://github.com/restic/restic), these scripts for Bash (Linux) and Powershell (Windows) automate system backups
 
 ## Installation

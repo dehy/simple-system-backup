@@ -17,7 +17,8 @@ fi
 
 # Create test file to backup
 TEST_DIR_TO_BACKUP=$(mktemp -d)
-cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 > $TEST_DIR_TO_BACKUP/sample.txt
+RANDOM_CONTENT="$(date +%s) $RANDOM"
+echo $RANDOM_CONTENT > $TEST_DIR_TO_BACKUP/sample.txt
 
 # Test environment variables
 export BACKUP_METHOD=s3
