@@ -57,7 +57,7 @@ if [ "$INSTALL_RESTIC" = "Y" -o "$INSTALL_RESTIC" = "y" ]; then
     chmod +x /usr/local/bin/restic
 
     echo "[I] Restic installed at /usr/local/bin/restic"
-else
+elif [ -z "${RESTIC_BIN}" ]; then
     echo "[E] Cannot continue if restic is not installed."
     exit 1
 fi
