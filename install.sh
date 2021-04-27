@@ -99,7 +99,10 @@ if [ -z "${BACKUPED_DIRS:-}" ]; then
     read -p "[?] Directories to backup (separate with spaces): " BACKUPED_DIRS
 fi
 
-RESTIC_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+if [ -z "${RESTIC_PASSWORD:-}" ]; then
+    RESTIC_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+fi
+# TODO add a warning if password is too unsecure
 
 sed \
     -e "s/SAMPLE_KEY_ID/${AWS_ACCESS_KEY_ID}/g" \
