@@ -5,6 +5,7 @@ set -eu
 CURRENT_DIR=$(dirname $(readlink -f $0))
 RESTIC_BIN=$(which restic)
 
+# TODO check backuprc file permission for u=rw,g=,o=
 . "$CURRENT_DIR/backuprc"
 
 if [ "$BACKUP_METHOD" = "s3" ]; then
@@ -41,4 +42,5 @@ fi
 $RESTIC_BIN --verbose backup ${EXCLUDE_FILE_PARAM:-} ${BACKUPED_DIRS}
 
 # Cleanup
+# TODO make these values dynamic
 $RESTIC_BIN --verbose forget --keep-daily 7 --keep-monthly 4 --prune
