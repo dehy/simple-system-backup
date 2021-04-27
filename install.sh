@@ -151,7 +151,7 @@ if [ -z "${INSTALL_CRON_DAILY:-}" ]; then
     INSTALL_CRON_DAILY=${INSTALL_CRON_DAILY:-"Y"}
 fi
 if [ "$INSTALL_CRON_DAILY" = "Y" -o "$INSTALL_CRON_DAILY" = "y" ]; then
-    ln -s "$INSTALLATION_PATH/backup.sh" /etc/cron.daily/simple-system-backup
+    ln -sf "$INSTALLATION_PATH/backup.sh" /etc/cron.daily/simple-system-backup
     echo ""
     echo "[I] Daily cron installed!"
     ls -l /etc/cron.daily/simple-system-backup
