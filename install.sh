@@ -14,13 +14,16 @@ INSTALLATION_PATH="/opt/${DIR_NAME}"
 
 # Prerequisite: restic
 RESTIC_BIN="$(which restic || true)"
+INSTALL_RESTIC=${INSTALL_RESTIC:-}
 echo -n "[I] Searching for restic binary in PATH: "
 if [ "$RESTIC_BIN" = "" ]; then
     echo "not found"
 else
-    echo "found at $RESTIC_BIN: $($RESTIC_BIN version)"
+    echo "found at $RESTIC_BIN ($($RESTIC_BIN version))"
+    if [ -z "${INSTALL_RESTIC}" ]; then
+        INSTALL_RESTIC="n"
+    fi
 fi
-INSTALL_RESTIC=${INSTALL_RESTIC:-}
 if [ "$INSTALL_RESTIC" != "y" -a "$INSTALL_RESTIC" != "Y" ]; then
     read -p "[?] Download and install restic binary from github? [Y/n]" INSTALL_RESTIC
     INSTALL_RESTIC=${INSTALL_RESTIC:-"Y"}
