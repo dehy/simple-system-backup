@@ -66,6 +66,15 @@ fi
 #curl -s -o "${DOWNLOADED_ARCHIVE_PATH}" -L https://github.com/dehy/simple-system-backup/archive/refs/tags/${SSB_VERSION}.tar.gz
 #tar xf "${DOWNLOADED_ARCHIVE_PATH}" -C /opt/
 mkdir -p "${INSTALLATION_PATH}/"
+
+# If a config file is present, load it
+if [ -r "${INSTALLATION_PATH}/backuprc" ]; then
+    echo "[I] Found a previous backuprc file. Backuping and loading it."
+    # Make a backup
+    cp "${INSTALLATION_PATH}/backuprc" "${INSTALLATION_PATH}/backuprc.$(date +%Y%m%d%H%M%S)"
+    . "${INSTALLATION_PATH}/backuprc"
+fi
+
 cp -R "${INSTALL_SCRIPT_DIR}"/* "${INSTALLATION_PATH}/"
 
 if [ -z "${AWS_ENDPOINT:-}" ]; then
