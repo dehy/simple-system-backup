@@ -1,13 +1,20 @@
 #!/usr/bin/env sh
 
-set -eux
+set -eu
 
 CURRENT_DIR=$(dirname $(readlink -f $0))
 RESTIC_BIN=$(which restic)
 
 . "$CURRENT_DIR/backuprc"
 
-export RESTIC_REPOSITORY="${RESTIC_REPOSITORY_PREFIX}/${BACKUPED_HOST}"
+if [ "$BACKUP_METHOD" = "s3" ]; then
+    export RESTIC_REPOSITORY="s3:${AWS_ENDPOINT}/${AWS_BUCKET}/${BACKUPED_HOST}"
+elif [ "$BACKUP_METHOD" = "ftp" -o "$BACKUP_METHOD" = "ftps" ]; then
+    export RESTIC_REPOSITORY="${BACKUP_METHOD}://${FTP_USERNAME}:${FTP_PASSWORD}@${FTP_SERVER}/${BACKUPED_HOST}"
+else
+    echo "[E] Unknown backup method. Aborting."
+    exit 1
+fi
 
 if [ "${1:-}" = "--init" ]; then
     # Init repository
