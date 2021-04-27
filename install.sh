@@ -24,8 +24,8 @@ else
         INSTALL_RESTIC="n"
     fi
 fi
-if [ "$INSTALL_RESTIC" != "y" -a "$INSTALL_RESTIC" != "Y" ]; then
-    read -p "[?] Download and install restic binary from github? [Y/n]" INSTALL_RESTIC
+if [ -z "$INSTALL_RESTIC" ]; then
+    read -p "[?] Download and install restic binary from github? [Y/n] " INSTALL_RESTIC
     INSTALL_RESTIC=${INSTALL_RESTIC:-"Y"}
 fi
 if [ "$INSTALL_RESTIC" = "Y" -o "$INSTALL_RESTIC" = "y" ]; then
