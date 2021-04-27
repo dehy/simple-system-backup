@@ -26,9 +26,21 @@ if [ "$INSTALL_RESTIC" != "y" -a "$INSTALL_RESTIC" != "Y" ]; then
     INSTALL_RESTIC=${INSTALL_RESTIC:-"Y"}
 fi
 if [ "$INSTALL_RESTIC" = "Y" -o "$INSTALL_RESTIC" = "y" ]; then
-    HARDWARE_PLATFORM=$(uname -m)
-    if [ "${HARDWARE_PLATFORM}" = "x86_64" ]; then
+    FOUND_OPERATING_SYSTEM=$(uname -o)
+    if [ "${FOUND_OPERATING_SYSTEM}" = "GNU/Linux" -o "${FOUND_OPERATING_SYSTEM}" = "Linux" ]; then
+        OPERATING_SYSTEM="linux"
+    fi
+    if [ -z "${OPERATING_SYSTEM:-}" ]; then
+        echo "[E] Unsupported operating system: $FOUND_OPERATING_SYSTEM"
+        exit 1
+    fi
+    FOUND_HARDWARE_PLATFORM=$(uname -m)
+    if [ "${FOUND_HARDWARE_PLATFORM}" = "x86_64" ]; then
         HARDWARE_PLATFORM="amd64"
+    fi
+    if [ -z "${OPERATING_SYSTEM:-}" ]; then
+        echo "[E] Unsupported hardware platform: $FOUND_HARDWARE_PLATFORM"
+        exit 1
     fi
     echo "[I] Hardware platform found: ${HARDWARE_PLATFORM}"
     if [ -z "${RESTIC_VERSION:-}" ]; then
@@ -36,7 +48,7 @@ if [ "$INSTALL_RESTIC" = "Y" -o "$INSTALL_RESTIC" = "y" ]; then
         RESTIC_VERSION=${RESTIC_VERSION:-"$DEFAULT_RESTIC_VERSION"}
     fi
     TMP_RESTIC_DOWNLOAD_DIR=$(mktemp -d)
-    curl -s -L -o "$TMP_RESTIC_DOWNLOAD_DIR/restic.bz2" https://github.com/restic/restic/releases/download/v${RESTIC_VERSION}/restic_${RESTIC_VERSION}_linux_${HARDWARE_PLATFORM}.bz2
+    curl -s -L -o "$TMP_RESTIC_DOWNLOAD_DIR/restic.bz2" https://github.com/restic/restic/releases/download/v${RESTIC_VERSION}/restic_${RESTIC_VERSION}_${OPERATING_SYSTEM}_${HARDWARE_PLATFORM}.bz2
     bunzip2 "$TMP_RESTIC_DOWNLOAD_DIR/restic.bz2"
     mv -i "$TMP_RESTIC_DOWNLOAD_DIR/restic" /usr/local/bin/restic
     chmod +x /usr/local/bin/restic
@@ -88,7 +100,7 @@ sed \
     "${INSTALLATION_PATH}/backuprc.example" > "${INSTALLATION_PATH}/backuprc"
 
 chmod +x "${INSTALLATION_PATH}/backup.sh"
-echo "[I] Simply System Backup is installed at ${INSTALLATION_PATH}!"
+echo "[I] Simple System Backup is installed at ${INSTALLATION_PATH}!"
 
 cat << EOF
 
