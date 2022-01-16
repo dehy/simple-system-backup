@@ -122,7 +122,7 @@ sed \
     -e "s&\(BACKUPED_DIRS=\"\).*$&\1${BACKUPED_DIRS}\"&" \
     "${INSTALLATION_PATH}/backuprc.example" > "${INSTALLATION_PATH}/backuprc"
 
-chmod 600 "${INSTALLATION_PATH}/backuprc"
+chmod 0600 "${INSTALLATION_PATH}/backuprc"
 
 chmod +x "${INSTALLATION_PATH}/backup.sh"
 echo "[I] Simple System Backup is installed at ${INSTALLATION_PATH}!"
