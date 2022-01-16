@@ -29,7 +29,9 @@ if [ -z "$INSTALL_RESTIC" ]; then
     INSTALL_RESTIC=${INSTALL_RESTIC:-"Y"}
 fi
 if [ "$INSTALL_RESTIC" = "Y" -o "$INSTALL_RESTIC" = "y" ]; then
+
     FOUND_OPERATING_SYSTEM=$(uname -o)
+    echo "[I] Operating System found: ${FOUND_OPERATING_SYSTEM:-"unknown"}"
     if [ "${FOUND_OPERATING_SYSTEM}" = "GNU/Linux" -o "${FOUND_OPERATING_SYSTEM}" = "Linux" ]; then
         OPERATING_SYSTEM="linux"
     fi
@@ -37,26 +39,34 @@ if [ "$INSTALL_RESTIC" = "Y" -o "$INSTALL_RESTIC" = "y" ]; then
         echo "[E] Unsupported operating system: $FOUND_OPERATING_SYSTEM"
         exit 1
     fi
+
     FOUND_HARDWARE_PLATFORM=$(uname -m)
+    echo "[I] Hardware platform found: ${FOUND_HARDWARE_PLATFORM:-"unknown"}"
     if [ "${FOUND_HARDWARE_PLATFORM}" = "x86_64" ]; then
         HARDWARE_PLATFORM="amd64"
     fi
-    if [ -z "${OPERATING_SYSTEM:-}" ]; then
+    if [ -z "${HARDWARE_PLATFORM:-}" ]; then
         echo "[E] Unsupported hardware platform: $FOUND_HARDWARE_PLATFORM"
         exit 1
     fi
-    echo "[I] Hardware platform found: ${HARDWARE_PLATFORM}"
+
     if [ -z "${RESTIC_VERSION:-}" ]; then
         read -p "[?] Restic version to download [$DEFAULT_RESTIC_VERSION]:" RESTIC_VERSION
         RESTIC_VERSION=${RESTIC_VERSION:-"$DEFAULT_RESTIC_VERSION"}
     fi
+    echo "[I] Downloading and installing restic binary v${RESTIC_VERSION} from GitHub to /usr/local/bin/restic"
+    GITHUB_DOWNLOAD_URL="https://github.com/restic/restic/releases/download/v${RESTIC_VERSION}/restic_${RESTIC_VERSION}_${OPERATING_SYSTEM}_${HARDWARE_PLATFORM}.bz2"
+    echo "    $GITHUB_DOWNLOAD_URL"
     TMP_RESTIC_DOWNLOAD_DIR=$(mktemp -d)
-    curl -s -L -o "$TMP_RESTIC_DOWNLOAD_DIR/restic.bz2" https://github.com/restic/restic/releases/download/v${RESTIC_VERSION}/restic_${RESTIC_VERSION}_${OPERATING_SYSTEM}_${HARDWARE_PLATFORM}.bz2
+    curl -s -L -o "$TMP_RESTIC_DOWNLOAD_DIR/restic.bz2" "${GITHUB_DOWNLOAD_URL}"
     bunzip2 "$TMP_RESTIC_DOWNLOAD_DIR/restic.bz2"
     mv -i "$TMP_RESTIC_DOWNLOAD_DIR/restic" /usr/local/bin/restic
     chmod +x /usr/local/bin/restic
+    unset GITHUB_DOWNLOAD_URL
+    rm -rf "$TMP_RESTIC_DOWNLOAD_DIR"
+    unset TMP_RESTIC_DOWNLOAD_DIR
 
-    echo "[I] Restic installed at /usr/local/bin/restic"
+    echo "[I] Restic is now installed at /usr/local/bin/restic"
 elif [ -z "${RESTIC_BIN}" ]; then
     echo "[E] Cannot continue if restic is not installed."
     exit 1
@@ -72,10 +82,9 @@ mkdir -p "${INSTALLATION_PATH}/"
 
 # If a config file is present, load it
 if [ -r "${INSTALLATION_PATH}/backuprc" ]; then
-    echo "[I] Found a previous backuprc file. Backuping and loading it."
-    # Make a backup
-    cp "${INSTALLATION_PATH}/backuprc" "${INSTALLATION_PATH}/backuprc.$(date +%Y%m%d%H%M%S)"
-    . "${INSTALLATION_PATH}/backuprc"
+    echo "[I] Found a previous backuprc file. Backuping and loading it for configuration."
+    cp "${INSTALLATION_PATH}/backuprc" "${INSTALLATION_PATH}/backuprc.$(date +%Y%m%d%H%M%S)" # Make a backup
+    . "${INSTALLATION_PATH}/backuprc" # Load the config
 fi
 
 cp -R "${INSTALL_SCRIPT_DIR}"/* "${INSTALLATION_PATH}/"
@@ -126,6 +135,7 @@ cat << EOF
 !!!                                  !!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!! Save it in a secure place !!!!!!!
+!! It will be needed to restore files !!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 EOF
