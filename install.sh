@@ -6,7 +6,7 @@ if [ "${DEBUG:-}" = "true" ]; then
 fi
 
 INSTALL_SCRIPT_DIR=$(dirname $0)
-DEFAULT_RESTIC_VERSION="0.12.0"
+DEFAULT_RESTIC_VERSION="0.12.1"
 
 SSB_VERSION=$(cat ${INSTALL_SCRIPT_DIR}/VERSION)
 DIR_NAME="simple-system-backup"
@@ -36,8 +36,7 @@ if [ "$INSTALL_RESTIC" = "Y" -o "$INSTALL_RESTIC" = "y" ]; then
         OPERATING_SYSTEM="linux"
     fi
     if [ -z "${OPERATING_SYSTEM:-}" ]; then
-        echo "[E] Unsupported operating system: $FOUND_OPERATING_SYSTEM"
-        exit 1
+        echo "[E] Unsupported operating system: $FOUND_OPERATING_SYSTEM"        exit 1
     fi
 
     FOUND_HARDWARE_PLATFORM=$(uname -m)
