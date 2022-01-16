@@ -8,12 +8,8 @@ RESTIC_BIN=$(which restic)
 # TODO check backuprc file permission for u=rw,g=,o=
 . "$CURRENT_DIR/backuprc"
 
-if [ "$BACKUP_METHOD" = "s3" ]; then
-    export RESTIC_REPOSITORY="s3:${AWS_ENDPOINT}/${AWS_BUCKET}/${BACKUPED_HOST}"
-elif [ "$BACKUP_METHOD" = "ftp" -o "$BACKUP_METHOD" = "ftps" ]; then
-    export RESTIC_REPOSITORY="${BACKUP_METHOD}://${FTP_USERNAME}:${FTP_PASSWORD}@${FTP_SERVER}/${BACKUPED_HOST}"
-else
-    echo "[E] Unknown backup method. Aborting."
+if [ -z "${RESTIC_REPOSITORY:-}" ]; then
+    echo "[E] Missing backup repository information. Did you source the \`backuprc\` file?"
     exit 1
 fi
 

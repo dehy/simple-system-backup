@@ -17,3 +17,13 @@ export AWS_SECRET_ACCESS_KEY="SAMPLE_SECRET_KEY"
 export FTP_SERVER=ftp.server.invalid
 export FTP_USERNAME=backupuser
 export FTP_PASSWORD=backuppassword
+
+##
+## Do not alter after this line
+##
+
+if [ "$BACKUP_METHOD" = "s3" ]; then
+    export RESTIC_REPOSITORY="s3:${AWS_ENDPOINT}/${AWS_BUCKET}/${BACKUPED_HOST}"
+elif [ "$BACKUP_METHOD" = "ftp" -o "$BACKUP_METHOD" = "ftps" ]; then
+    export RESTIC_REPOSITORY="${BACKUP_METHOD}://${FTP_USERNAME}:${FTP_PASSWORD}@${FTP_SERVER}/${BACKUPED_HOST}"
+fi

@@ -1,9 +1,29 @@
-$env:AWS_ACCESS_KEY_ID = "SAMPLE_KEY_ID"
-$env:AWS_SECRET_ACCESS_KEY = "SAMPLE_ACCESS_KEY"
-$env:AWS_DEFAULT_REGION = "eu-west-3"
-
-$RESTIC_REPOSITORY_PREFIX = "s3:s3.eu-west-3.amazonaws.com/bucket_name"
-$env:RESTIC_PASSWORD="nonSecurePassword"
+# available: s3, ftp, ftps
+$env:BACKUP_METHOD = "s3"
 
 $BACKUPED_HOST="PC-HOME"
 $BACKUPED_DIRS="C:\Users\JohnDoe\", "E:\Data" 
+
+$env:RESTIC_PASSWORD="nonSecurePassword"
+
+# S3 Backup
+$env:AWS_ENDPOINT = "s3.eu-west-3.amazonaws.com"
+$env:AWS_DEFAULT_REGION = "eu-west-3"
+$env:AWS_BUCKET = "bucket_name"
+$env:AWS_ACCESS_KEY_ID = "SAMPLE_KEY_ID"
+$env:AWS_SECRET_ACCESS_KEY = "SAMPLE_ACCESS_KEY"
+
+# FTP Backup
+#$env:FTP_SERVER = "ftp.server.invalid"
+#$env:FTP_USERNAME = "backupuser"
+#$env:FTP_PASSWORD = "backuppassword"
+
+##
+## Do not alter after this line
+##
+
+if ( "$BACKUP_METHOD" -eq "s3" ) {
+    $env:RESTIC_REPOSITORY = "s3:$AWS_ENDPOINT/$AWS_BUCKET/$BACKUPED_HOST"
+} elseif ( "$BACKUP_METHOD" -eq "ftp" -Or "$BACKUP_METHOD" -eq "ftps" ) {
+    $env:RESTIC_REPOSITORY = "$BACKUP_METHOD://$FTP_USERNAME:$FTP_PASSWORD@$FTP_SERVER/$BACKUPED_HOST"
+}
