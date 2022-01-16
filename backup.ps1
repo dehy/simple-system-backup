@@ -34,7 +34,7 @@ Write-Host "Folders to backup: $BACKUPED_DIRS"
 restic --verbose backup --exclude-file="$CURRENT_DIR\excludes.txt" --use-fs-snapshot $BACKUPED_DIRS
 
 # Cleanup
-restic --verbose forget --keep-daily 7 --keep-monthly 4 --prune
+restic --verbose forget --keep-daily 7 --keep-weekly 4 --keep-monthly 4 --prune
 
 Set-PSDebug -Trace 0
 $ErrorActionPreference = "Continue"

@@ -43,4 +43,4 @@ $RESTIC_BIN --verbose backup ${EXCLUDE_FILE_PARAM:-} ${BACKUPED_DIRS}
 
 # Cleanup
 # TODO make these values dynamic
-$RESTIC_BIN --verbose forget --keep-daily 7 --keep-monthly 4 --prune
+$RESTIC_BIN --verbose forget --keep-daily 7 --keep-weekly 4 --keep-monthly 4 --prune
