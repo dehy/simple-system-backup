@@ -4,17 +4,25 @@ set -eu
 
 CURRENT_DIR=$(dirname $(readlink -f $0))
 RESTIC_BIN=$(which restic)
+BACKUPRC_FILE="$CURRENT_DIR/backuprc"
 
-# TODO check backuprc file permission for u=rw,g=,o=
-. "$CURRENT_DIR/backuprc"
+if [ $(stat -c %a "$BACKUPRC_FILE") != 600 ]; then
+    echo "[E] Backuprc file persmissions are incorrect. It should be 600."
+    exit 1
+fi
+if [ $(stat -c %u "$BACKUPRC_FILE") != 0 -o $(stat -c %g "$BACKUPRC_FILE") != 0 ]; then
+    echo "[E] Backuprc file ownership is incorrect. It should be owned by user and group 'root'."
+    exit 1
+fi
+
+. "$BACKUPRC_FILE"
 
 if [ -z "${RESTIC_REPOSITORY:-}" ]; then
     echo "[E] Missing backup repository information. Did you source the \`backuprc\` file?"
     exit 1
 fi
 
-if [ "${1:-}" = "--init" ]; then
-    # Init repository
+if [ "${1:-}" = "--init" ]; then    # Init repository
     $RESTIC_BIN init
     exit 0
 fi
